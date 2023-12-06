@@ -36,8 +36,11 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+        
+        ScoreText.text = $"Score: {GameManager.instance.playerName} : {m_Points}"; //Shows PlayerName and their points
+        m_HighScore = GameManager.instance.HighScoreNum; //Sets Highscore to previous
+        HighScoreText.text = $"HighScore: {GameManager.instance.HighScoreName} : {GameManager.instance.HighScoreNum}"; //Shows Highscore's playerName and HighScore
 
-        ScoreText.text = $"Score: {GameManager.playerName} - {m_Points}";
     }
 
     private void Update()
@@ -67,7 +70,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score: {GameManager.playerName} - {m_Points}";
+        ScoreText.text = $"Score: {GameManager.instance.playerName} : {m_Points}";
     }
 
     public void GameOver()
@@ -75,16 +78,17 @@ public class MainManager : MonoBehaviour
         m_GameOver = true;
         GameOverText.SetActive(true);
         CheckHighScore();
+        GameManager.instance.SaveHighScore();
     }
 
     public void CheckHighScore()
     {
-        if (m_Points > m_HighScore)
+        if (m_Points >= m_HighScore)
         {
             m_HighScore = m_Points;
-            HighScoreText.text = $"HighScore: {GameManager.playerName} - {m_HighScore}";
+            HighScoreText.text = $"HighScore: {GameManager.instance.playerName} : {m_HighScore}";
+            GameManager.instance.HighScoreName = GameManager.instance.playerName;
+            GameManager.instance.HighScoreNum = m_HighScore;
         }
     }
-
-    
 }
